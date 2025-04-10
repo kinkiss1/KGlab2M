@@ -12,162 +12,352 @@
 #define PI 3.14159265358979323846
 
 
-struct point
-{
-	double x = 0;
-	double y = 0;
-	double z = 0;
 
-	const double* p() const
-	{
-		return &x;
+
+//struct Vector3 {
+//	double x, y, z;
+//
+//	Vector3 operator-(const Vector3& v) const {
+//		return { x - v.x, y - v.y, z - v.z };
+//	}
+//
+//	Vector3 cross(const Vector3& v) const {
+//		return {
+//			y * v.z - z * v.y,
+//			z * v.x - x * v.z,
+//			x * v.y - y * v.x
+//		};
+//	}
+//
+//	double length() const {
+//		return std::sqrt(x * x + y * y + z * z);
+//	}
+//
+//	Vector3 normalize() const {
+//		double len = length();
+//		return { x / len, y / len, z / len };
+//	}
+//};
+//
+//Vector3 computeNormal(const Vector3& A, const Vector3& B, const Vector3& C) {
+//	Vector3 AB = B - A;
+//	Vector3 AC = C - A;
+//	Vector3 N = AB.cross(AC);
+//	return N.normalize();
+//}
+//
+//void static cyl(int seed = 0)
+//{
+//	glBegin(GL_QUADS);
+//	Vector3 A[] = { 1.0, 0.0, 0.0 };
+//	Vector3 B[] = { 6.0, 3.0, 0.0 };
+//	Vector3 C[] = { 4.0, 7.0, 0.0 };
+//	Vector3 D[] = { 0.0, 2.0, 0.0 };
+//	Vector3 E[] = { -4.0, 3.0, 0.0 };
+//	Vector3 F[] = { -7.0, -2.0, 0.0 };
+//	Vector3 G[] = { -2.0, -6.0, 0.0 };
+//	Vector3 H[] = { 3.0, -4.0, 0.0 };
+//	double height = 1.0;
+//	Vector3 A1[] = { 1.0, 0.0,height };
+//	Vector3 B1[] = { 6.0, 3.0, height };
+//	Vector3 C1[] = { 4.0, 7.0, height };
+//	Vector3 D1[] = { 0.0, 2.0, height };
+//	Vector3 E1[] = { -4.0, 3.0, height };
+//	Vector3 F1[] = { -7.0, -2.0, height };
+//	Vector3 G1[] = { -2.0, -6.0, height };
+//	Vector3 H1[] = { 3.0, -4.0, height };
+//
+//	std::mt19937 gen(seed);
+//	std::uniform_real_distribution<double> r(0, 1);
+//	Vector3 normal = computeNormal(A, B, C);
+//   	//floor
+//
+//	glNormal3d(0, 0, -1);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&A);
+//	glVertex3dv((double*)&B);
+//	glVertex3dv((double*)&C);
+//	glVertex3dv((double*)&D);
+//
+//	glNormal3d(0, 0, -1);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&A);
+//	glVertex3dv((double*)&D);
+//	glVertex3dv((double*)&E);
+//	glVertex3dv((double*)&H);
+//
+//	glNormal3d(0, 0, -1);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&E);
+//	glVertex3dv((double*)&F);
+//	glVertex3dv((double*)&G);
+//	glVertex3dv((double*)&H);
+//
+//	//roof
+//	glNormal3d(0, 0, 1);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&A1);
+//	glVertex3dv((double*)&B1);
+//	glVertex3dv((double*)&C1);
+//	glVertex3dv((double*)&D1);
+//
+//	glNormal3d(0, 0, 1);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&A1);
+//	glVertex3dv((double*)&D1);
+//	glVertex3dv((double*)&E1);
+//	glVertex3dv((double*)&H1);
+//
+//	//walls connecting
+//
+//	normal = computeNormal(A, A1, B1);
+//	glNormal3dv((double*)&normal);
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&A);
+//	glVertex3dv((double*)&A1);
+//	glVertex3dv((double*)&B1);
+//	glVertex3dv((double*)&B);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&B);
+//	glVertex3dv((double*)&B1);
+//	glVertex3dv((double*)&C1);
+//	glVertex3dv((double*)&C);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&C);
+//	glVertex3dv((double*)&C1);
+//	glVertex3dv((double*)&D1);
+//	glVertex3dv((double*)&D);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&D);
+//	glVertex3dv((double*)&D1);
+//	glVertex3dv((double*)&E1);
+//	glVertex3dv((double*)&E);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&F);
+//	glVertex3dv((double*)&F1);
+//	glVertex3dv((double*)&G1);
+//	glVertex3dv((double*)&G);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&E1);
+//	glVertex3dv((double*)&F1);
+//	glVertex3dv((double*)&G1);
+//	glVertex3dv((double*)&H1);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&G);
+//	glVertex3dv((double*)&G1);
+//	glVertex3dv((double*)&H1);
+//	glVertex3dv((double*)&H);
+//
+//	glColor3d(r(gen), r(gen), r(gen));
+//	glVertex3dv((double*)&H);
+//	glVertex3dv((double*)&H1);
+//	glVertex3dv((double*)&A1);
+//	glVertex3dv((double*)&A);
+
+	//double VectorFE[] = { F[0] - E[0], F[1] - E[1], F[2] - E[2] };
+	//double startfaza = atan(VectorFE[1] / VectorFE[0]);
+	//double MID[] = { (E[0] + F[0]) / 2,(E[1] + F[1]) / 2, (E[2] + F[2]) / 2 };
+	//double radius = sqrt(VectorFE[0] * VectorFE[0] + VectorFE[1] * VectorFE[1]) / 2; //sqrt(13)
+	//int i = 0;
+	//glColor3d(r(gen), r(gen), r(gen));
+	//// выпуклость на грани e f f1 e1
+	//while (i < 90)
+	//{
+	//	double x = MID[0] + radius * (cos(2 * PI * i / 180 + startfaza));
+	//	double y = MID[1] + radius * (sin(2 * PI * i / 180 + startfaza));
+	//	double z = MID[2];
+	//	double x1 = MID[0] + radius * (cos(2 * PI * (i + 1) / 180 + startfaza));
+	//	double y1 = MID[1] + radius * (sin(2 * PI * (i + 1) / 180 + startfaza));
+	//	double z1 = MID[2];
+	//	glColor3d(r(gen), r(gen), r(gen));
+	//	glVertex3d(MID[0], MID[1], MID[2]); // центр
+	//	glVertex3d(x, y, z); //начало
+	//	glVertex3d(x1, y1, z1);  // прирощение
+	//	glVertex3d(MID[0], MID[1], MID[2]);
+	//	glColor3d(r(gen), r(gen), r(gen));
+	//	glVertex3d(x, y, z);
+	//	glVertex3d(x, y, z + height);
+	//	glVertex3d(x1, y1, z1 + height);
+	//	glVertex3d(x1, y1, z1);
+	//	glColor3d(r(gen), r(gen), r(gen));
+	//	glVertex3d(MID[0], MID[1], MID[2] + height); // центр
+	//	glVertex3d(x, y, z + height); //начало
+	//	glVertex3d(x1, y1, z1 + height);  // прирощение
+	//	glVertex3d(MID[0], MID[1], MID[2] + height);
+	//	i++;
+	//}
+	/*glEnd();
+}*/
+
+struct Vector3 {
+	double x, y, z;
+
+	Vector3 operator-(const Vector3& v) const {
+		return { x - v.x, y - v.y, z - v.z };
+	}
+
+	Vector3 cross(const Vector3& v) const {
+		return {
+			y * v.z - z * v.y,
+			z * v.x - x * v.z,
+			x * v.y - y * v.x
+		};
+	}
+
+	double length() const {
+		return std::sqrt(x * x + y * y + z * z);
+	}
+
+	Vector3 normalize() const {
+		double len = length();
+		return { x / len, y / len, z / len };
 	}
 };
+
+Vector3 computeNormal(const Vector3& A, const Vector3& B, const Vector3& C) {
+	Vector3 AB = B - A;
+	Vector3 AC = C - A;
+	Vector3 N = AC.cross(AB); // Изменили порядок векторов
+	return N.normalize();
+}
 
 void static cyl(int seed = 0)
 {
 	glBegin(GL_QUADS);
-	double A[] = { 1.0, 0.0, 0.0 };
-	double B[] = { 6.0, 3.0, 0.0 };
-	double C[] = { 4.0, 7.0, 0.0 };
-	double D[] = { 0.0, 2.0, 0.0 };
-	double E[] = { -4.0, 3.0, 0.0 };
-	double F[] = { -7.0, -2.0, 0.0 };
-	double G[] = { -2.0, -6.0, 0.0 };
-	double H[] = { 3.0, -4.0, 0.0 };
+	Vector3 A = { 1.0, 0.0, 0.0 };
+	Vector3 B = { 6.0, 3.0, 0.0 };
+	Vector3 C = { 4.0, 7.0, 0.0 };
+	Vector3 D = { 0.0, 2.0, 0.0 };
+	Vector3 E = { -4.0, 3.0, 0.0 };
+	Vector3 F = { -7.0, -2.0, 0.0 };
+	Vector3 G = { -2.0, -6.0, 0.0 };
+	Vector3 H = { 3.0, -4.0, 0.0 };
 	double height = 1.0;
-	double A1[] = { 1.0, 0.0,height };
-	double B1[] = { 6.0, 3.0, height };
-	double C1[] = { 4.0, 7.0, height };
-	double D1[] = { 0.0, 2.0, height };
-	double E1[] = { -4.0, 3.0, height };
-	double F1[] = { -7.0, -2.0, height };
-	double G1[] = { -2.0, -6.0, height };
-	double H1[] = { 3.0, -4.0, height };
+	Vector3 A1 = { 1.0, 0.0, height };
+	Vector3 B1 = { 6.0, 3.0, height };
+	Vector3 C1 = { 4.0, 7.0, height };
+	Vector3 D1 = { 0.0, 2.0, height };
+	Vector3 E1 = { -4.0, 3.0, height };
+	Vector3 F1 = { -7.0, -2.0, height };
+	Vector3 G1 = { -2.0, -6.0, height };
+	Vector3 H1 = { 3.0, -4.0, height };
 
 	std::mt19937 gen(seed);
 	std::uniform_real_distribution<double> r(0, 1);
-	//floor
 
-	glNormal3d(0, 0, -1);
+	// Floor
+	Vector3 normal = computeNormal(A, B, C);
+	glNormal3d(0,0,-1);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(A);
-	glVertex3dv(B);
-	glVertex3dv(C);
-	glVertex3dv(D);
-
-	glNormal3d(0, 0, -1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(A);
-	glVertex3dv(D);
-	glVertex3dv(E);
-	glVertex3dv(H);
-
-	glNormal3d(0, 0, -1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(E);
-	glVertex3dv(F);
-	glVertex3dv(G);
-	glVertex3dv(H);
-
-	//roof
-	glNormal3d(0, 0, 1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(A1);
-	glVertex3dv(B1);
-	glVertex3dv(C1);
-	glVertex3dv(D1);
-
-	glNormal3d(0, 0, 1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(A1);
-	glVertex3dv(D1);
-	glVertex3dv(E1);
-	glVertex3dv(H1);
-
-	//walls connecting
+	glVertex3dv((double*)&A);
+	glVertex3dv((double*)&B);
+	glVertex3dv((double*)&C);
+	glVertex3dv((double*)&D);
 
 	
+	glNormal3d(0, 0, -1);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(A);
-	glVertex3dv(A1);
-	glVertex3dv(B1);
-	glVertex3dv(B);
+	glVertex3dv((double*)&A);
+	glVertex3dv((double*)&D);
+	glVertex3dv((double*)&E);
+	glVertex3dv((double*)&H);
 
+	
+	glNormal3d(0, 0, -1);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(B);
-	glVertex3dv(B1);
-	glVertex3dv(C1);
-	glVertex3dv(C);
+	glVertex3dv((double*)&E);
+	glVertex3dv((double*)&F);
+	glVertex3dv((double*)&G);
+	glVertex3dv((double*)&H);
 
+	// Roof
+	
+	glNormal3d(0, 0, 1);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(C);
-	glVertex3dv(C1);
-	glVertex3dv(D1);
-	glVertex3dv(D);
+	glVertex3dv((double*)&A1);
+	glVertex3dv((double*)&B1);
+	glVertex3dv((double*)&C1);
+	glVertex3dv((double*)&D1);
 
+	
+	glNormal3d(0, 0, 1);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(D);
-	glVertex3dv(D1);
-	glVertex3dv(E1);
-	glVertex3dv(E);
+	glVertex3dv((double*)&A1);
+	glVertex3dv((double*)&D1);
+	glVertex3dv((double*)&E1);
+	glVertex3dv((double*)&H1);
 
+	// Walls connecting
+	normal = computeNormal(A, A1, B1);
+	glNormal3dv((double*)&normal);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(F);
-	glVertex3dv(F1);
-	glVertex3dv(G1);
-	glVertex3dv(G);
+	glVertex3dv((double*)&A);
+	glVertex3dv((double*)&A1);
+	glVertex3dv((double*)&B1);
+	glVertex3dv((double*)&B);
 
+	normal = computeNormal(B, B1, C1);
+	glNormal3dv((double*)&normal);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(E1);
-	glVertex3dv(F1);
-	glVertex3dv(G1);
-	glVertex3dv(H1);
+	glVertex3dv((double*)&B);
+	glVertex3dv((double*)&B1);
+	glVertex3dv((double*)&C1);
+	glVertex3dv((double*)&C);
 
+	normal = computeNormal(C, C1, D1);
+	glNormal3dv((double*)&normal);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(G);
-	glVertex3dv(G1);
-	glVertex3dv(H1);
-	glVertex3dv(H);
+	glVertex3dv((double*)&C);
+	glVertex3dv((double*)&C1);
+	glVertex3dv((double*)&D1);
+	glVertex3dv((double*)&D);
 
+	normal = computeNormal(D, D1, E1);
+	glNormal3dv((double*)&normal);
 	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv(H);
-	glVertex3dv(H1);
-	glVertex3dv(A1);
-	glVertex3dv(A);
+	glVertex3dv((double*)&D);
+	glVertex3dv((double*)&D1);
+	glVertex3dv((double*)&E1);
+	glVertex3dv((double*)&E);
 
-	double VectorFE[] = { F[0] - E[0], F[1] - E[1], F[2] - E[2] };
-	double startfaza = atan(VectorFE[1] / VectorFE[0]);
-	double MID[] = { (E[0] + F[0]) / 2,(E[1] + F[1]) / 2, (E[2] + F[2]) / 2 };
-	double radius = sqrt(VectorFE[0] * VectorFE[0] + VectorFE[1] * VectorFE[1]) / 2; //sqrt(13)
-	int i = 0;
+	normal = computeNormal(F, F1, G1);
+	glNormal3dv((double*)&normal);
 	glColor3d(r(gen), r(gen), r(gen));
-	// выпуклость на грани e f f1 e1
-	while (i < 90)
-	{
-		double x = MID[0] + radius * (cos(2 * PI * i / 180 + startfaza));
-		double y = MID[1] + radius * (sin(2 * PI * i / 180 + startfaza));
-		double z = MID[2];
-		double x1 = MID[0] + radius * (cos(2 * PI * (i + 1) / 180 + startfaza));
-		double y1 = MID[1] + radius * (sin(2 * PI * (i + 1) / 180 + startfaza));
-		double z1 = MID[2];
-		glColor3d(r(gen), r(gen), r(gen));
-		glVertex3d(MID[0], MID[1], MID[2]); // центр
-		glVertex3d(x, y, z); //начало
-		glVertex3d(x1, y1, z1);  // прирощение
-		glVertex3d(MID[0], MID[1], MID[2]);
-		glColor3d(r(gen), r(gen), r(gen));
-		glVertex3d(x, y, z);
-		glVertex3d(x, y, z + height);
-		glVertex3d(x1, y1, z1 + height);
-		glVertex3d(x1, y1, z1);
-		glColor3d(r(gen), r(gen), r(gen));
-		glVertex3d(MID[0], MID[1], MID[2] + height); // центр
-		glVertex3d(x, y, z + height); //начало
-		glVertex3d(x1, y1, z1 + height);  // прирощение
-		glVertex3d(MID[0], MID[1], MID[2] + height);
-		i++;
-	}
+	glVertex3dv((double*)&F);
+	glVertex3dv((double*)&F1);
+	glVertex3dv((double*)&G1);
+	glVertex3dv((double*)&G);
+
+	normal = computeNormal(E1, F1, G1);
+	glNormal3dv((double*)&normal);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv((double*)&E1);
+	glVertex3dv((double*)&F1);
+	glVertex3dv((double*)&G1);
+	glVertex3dv((double*)&H1);
+
+	normal = computeNormal(G, G1, H1);
+	glNormal3dv((double*)&normal);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv((double*)&G);
+	glVertex3dv((double*)&G1);
+	glVertex3dv((double*)&H1);
+	glVertex3dv((double*)&H);
+
+	normal = computeNormal(H, H1, A1);
+	glNormal3dv((double*)&normal);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv((double*)&H);
+	glVertex3dv((double*)&H1);
+	glVertex3dv((double*)&A1);
+	glVertex3dv((double*)&A);
+
 	glEnd();
 }
 
