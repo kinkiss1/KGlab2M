@@ -6,9 +6,170 @@
 #include <iomanip>
 #include <sstream>
 #include "GUItextRectangle.h"
+#include <random>
 
 
+#define PI 3.14159265358979323846
 
+
+struct point
+{
+	double x = 0;
+	double y = 0;
+	double z = 0;
+
+	const double* p() const
+	{
+		return &x;
+	}
+};
+
+void static cyl(int seed = 0)
+{
+	glBegin(GL_QUADS);
+	double A[] = { 1.0, 0.0, 0.0 };
+	double B[] = { 6.0, 3.0, 0.0 };
+	double C[] = { 4.0, 7.0, 0.0 };
+	double D[] = { 0.0, 2.0, 0.0 };
+	double E[] = { -4.0, 3.0, 0.0 };
+	double F[] = { -7.0, -2.0, 0.0 };
+	double G[] = { -2.0, -6.0, 0.0 };
+	double H[] = { 3.0, -4.0, 0.0 };
+	double height = 1.0;
+	double A1[] = { 1.0, 0.0,height };
+	double B1[] = { 6.0, 3.0, height };
+	double C1[] = { 4.0, 7.0, height };
+	double D1[] = { 0.0, 2.0, height };
+	double E1[] = { -4.0, 3.0, height };
+	double F1[] = { -7.0, -2.0, height };
+	double G1[] = { -2.0, -6.0, height };
+	double H1[] = { 3.0, -4.0, height };
+
+	std::mt19937 gen(seed);
+	std::uniform_real_distribution<double> r(0, 1);
+	//floor
+
+	glNormal3d(0, 0, -1);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(A);
+	glVertex3dv(B);
+	glVertex3dv(C);
+	glVertex3dv(D);
+
+	glNormal3d(0, 0, -1);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(A);
+	glVertex3dv(D);
+	glVertex3dv(E);
+	glVertex3dv(H);
+
+	glNormal3d(0, 0, -1);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(E);
+	glVertex3dv(F);
+	glVertex3dv(G);
+	glVertex3dv(H);
+
+	//roof
+	glNormal3d(0, 0, 1);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(A1);
+	glVertex3dv(B1);
+	glVertex3dv(C1);
+	glVertex3dv(D1);
+
+	glNormal3d(0, 0, 1);
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(A1);
+	glVertex3dv(D1);
+	glVertex3dv(E1);
+	glVertex3dv(H1);
+
+	//walls connecting
+
+	
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(A);
+	glVertex3dv(A1);
+	glVertex3dv(B1);
+	glVertex3dv(B);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(B);
+	glVertex3dv(B1);
+	glVertex3dv(C1);
+	glVertex3dv(C);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(C);
+	glVertex3dv(C1);
+	glVertex3dv(D1);
+	glVertex3dv(D);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(D);
+	glVertex3dv(D1);
+	glVertex3dv(E1);
+	glVertex3dv(E);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(F);
+	glVertex3dv(F1);
+	glVertex3dv(G1);
+	glVertex3dv(G);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(E1);
+	glVertex3dv(F1);
+	glVertex3dv(G1);
+	glVertex3dv(H1);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(G);
+	glVertex3dv(G1);
+	glVertex3dv(H1);
+	glVertex3dv(H);
+
+	glColor3d(r(gen), r(gen), r(gen));
+	glVertex3dv(H);
+	glVertex3dv(H1);
+	glVertex3dv(A1);
+	glVertex3dv(A);
+
+	double VectorFE[] = { F[0] - E[0], F[1] - E[1], F[2] - E[2] };
+	double startfaza = atan(VectorFE[1] / VectorFE[0]);
+	double MID[] = { (E[0] + F[0]) / 2,(E[1] + F[1]) / 2, (E[2] + F[2]) / 2 };
+	double radius = sqrt(VectorFE[0] * VectorFE[0] + VectorFE[1] * VectorFE[1]) / 2; //sqrt(13)
+	int i = 0;
+	glColor3d(r(gen), r(gen), r(gen));
+	// выпуклость на грани e f f1 e1
+	while (i < 90)
+	{
+		double x = MID[0] + radius * (cos(2 * PI * i / 180 + startfaza));
+		double y = MID[1] + radius * (sin(2 * PI * i / 180 + startfaza));
+		double z = MID[2];
+		double x1 = MID[0] + radius * (cos(2 * PI * (i + 1) / 180 + startfaza));
+		double y1 = MID[1] + radius * (sin(2 * PI * (i + 1) / 180 + startfaza));
+		double z1 = MID[2];
+		glColor3d(r(gen), r(gen), r(gen));
+		glVertex3d(MID[0], MID[1], MID[2]); // центр
+		glVertex3d(x, y, z); //начало
+		glVertex3d(x1, y1, z1);  // прирощение
+		glVertex3d(MID[0], MID[1], MID[2]);
+		glColor3d(r(gen), r(gen), r(gen));
+		glVertex3d(x, y, z);
+		glVertex3d(x, y, z + height);
+		glVertex3d(x1, y1, z1 + height);
+		glVertex3d(x1, y1, z1);
+		glColor3d(r(gen), r(gen), r(gen));
+		glVertex3d(MID[0], MID[1], MID[2] + height); // центр
+		glVertex3d(x, y, z + height); //начало
+		glVertex3d(x1, y1, z1 + height);  // прирощение
+		glVertex3d(MID[0], MID[1], MID[2] + height);
+		i++;
+	}
+	glEnd();
+}
 
 
 #ifdef _DEBUG
@@ -233,35 +394,35 @@ void Render(double delta_time)
 			   //(GL_SMOOTH - плоская закраска)
 
 	//============ РИСОВАТЬ ТУТ ==============
-
+	cyl();
 	
 
-	//квадратик станкина
-	//так как расчет освещения происходит только в вершинах
-	// (закраска по Гуро)
-	//то рисуем квадратик из более маленьких квадратиков
-	glBindTexture(GL_TEXTURE_2D, texId);
-	glBegin(GL_QUADS);
-	glNormal3d(0, 0, 1);
-	double h = 0.025;
-	for (double x = h; x<= 1; x+= h)
-		for (double y = h; y <= 1; y += h)
-		{
-			glColor3d(1, 1, 0);
+	////квадратик станкина
+	////так как расчет освещения происходит только в вершинах
+	//// (закраска по Гуро)
+	////то рисуем квадратик из более маленьких квадратиков
+	//glBindTexture(GL_TEXTURE_2D, texId);
+	//glBegin(GL_QUADS);
+	//glNormal3d(0, 0, 1);
+	//double h = 0.025;
+	//for (double x = h; x<= 1; x+= h)
+	//	for (double y = h; y <= 1; y += h)
+	//	{
+	//		glColor3d(1, 1, 0);
 
-			glTexCoord2d(x, y);
-			glVertex2d(x, y);
+	//		glTexCoord2d(x, y);
+	//		glVertex2d(x, y);
 
-			glTexCoord2d(x-h, y);
-			glVertex2d(x-h, y);
+	//		glTexCoord2d(x-h, y);
+	//		glVertex2d(x-h, y);
 
-			glTexCoord2d(x - h, y-h);
-			glVertex2d(x - h, y-h);
+	//		glTexCoord2d(x - h, y-h);
+	//		glVertex2d(x - h, y-h);
 
-			glTexCoord2d(x, y - h);
-			glVertex2d(x, y - h);
-		}
-	glEnd();
+	//		glTexCoord2d(x, y - h);
+	//		glVertex2d(x, y - h);
+	//	}
+	//glEnd();
 
 
 	//===============================================
