@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <vector>
 
-
 #define PI 3.14159265358979323846
 
 struct Vector3 {
@@ -65,8 +64,6 @@ Vector3 computeNormalSide(const double* A, const double* B, const double* C) {
 	Vector3 N = AC.cross(AB);
 	return N.normalize();
 }
-
-
 
 #ifdef _DEBUG
 #include <Debugapi.h> 
@@ -281,10 +278,6 @@ void Render(double delta_time)
 			   //(GL_SMOOTH - плоская закраска)
 
 	//============ РИСОВАТЬ ТУТ ==============
-
-
-
-
 	Vector3 A = { 1.0, 0.0, 0.0 };
 	Vector3 B = { 6.0, 3.0, 0.0 };
 	Vector3 C = { 4.0, 7.0, 0.0 };
@@ -320,7 +313,6 @@ void Render(double delta_time)
 	Vector3 normal = computeNormal(A, B, C);
 
 	glBegin(GL_QUADS);
-
 
 	// Floor
 	glNormal3d(0, 0, -1);
@@ -439,6 +431,7 @@ void Render(double delta_time)
 
 	i = 0;
 	glColor3d(0.3, 0.5, 0.1);
+
 	while (i<90)
 	{
 		double x = MID[0] + radius * cos(2 * PI * i / 180 + startfaza);
@@ -486,7 +479,6 @@ void Render(double delta_time)
 	light.DrawLightGizmo();
 
 	//================Сообщение в верхнем левом углу=======================
-
 	//переключаемся на матрицу проекции
 	glMatrixMode(GL_PROJECTION);
 	//сохраняем текущую матрицу проекции с перспективным преобразованием
