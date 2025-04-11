@@ -45,6 +45,28 @@ Vector3 computeNormal(const Vector3& A, const Vector3& B, const Vector3& C) {
 	return N.normalize();
 }
 
+Vector3 computeNormalTop(const double* A, const double* B, const double* C) {
+	Vector3 AB = { B[0] - A[0], B[1] - A[1], B[2] - A[2] };
+	Vector3 AC = { C[0] - A[0], C[1] - A[1], C[2] - A[2] };
+	Vector3 N = AB.cross(AC);
+	return N.normalize();
+}
+
+Vector3 computeNormalBot(const double* A, const double* B, const double* C) {
+	Vector3 AB = { B[0] - A[0], B[1] - A[1], B[2] - A[2] };
+	Vector3 AC = { C[0] - A[0], C[1] - A[1], C[2] - A[2] };
+	Vector3 N = AC.cross(AB);
+	return N.normalize();
+}
+
+Vector3 computeNormalSide(const double* A, const double* B, const double* C) {
+	Vector3 AB = { B[0] - A[0], B[1] - A[1], B[2] - A[2] };
+	Vector3 AC = { C[0] - A[0], C[1] - A[1], C[2] - A[2] };
+	Vector3 N = AC.cross(AB);
+	return N.normalize();
+}
+
+
 
 #ifdef _DEBUG
 #include <Debugapi.h> 
@@ -390,16 +412,40 @@ void Render(double delta_time)
 		double x1 = MID[0] + radius * cos(2 * PI * (i + 1) / 180 + startfaza);
 		double y1 = MID[1] + radius * sin(2 * PI * (i + 1) / 180 + startfaza);
 		double z1 = MID[2];
+
+		Vector3 normalBot = computeNormalBot(MID, new double[3] {x, y, z}, new double[3] {x1, y1, z1});
+		glNormal3dv((double*)&normalBot);
 		glColor3d(0.3, 0.5, 0.1);
 		glVertex3d(MID[0], MID[1], MID[2]);
 		glVertex3d(x, y, z);
+
+		glNormal3dv((double*)&normalBot);
 		glVertex3d(x1, y1, z1);
 		glVertex3d(MID[0], MID[1], MID[2]);
-		glColor3d(0.3, 0.5, 0.1);
+
+		Vector3 normalSide = computeNormalSide(new double[3] {x, y, z}, new double[3] {x, y, z + height}, new double[3] {x1, y1, z1 + height});
+		glNormal3dv((double*)&normalSide);
+		glColor3d(1, 0.5, 0.1);
 		glVertex3d(x, y, z);
 		glVertex3d(x, y, z + height);
 		glVertex3d(x1, y1, z1 + height);
 		glVertex3d(x1, y1, z1);
+
+		i++;
+	}
+
+	i = 0;
+	glColor3d(0.3, 0.5, 0.1);
+	while (i<90)
+	{
+		double x = MID[0] + radius * cos(2 * PI * i / 180 + startfaza);
+		double y = MID[1] + radius * sin(2 * PI * i / 180 + startfaza);
+		double z = MID[2];
+		double x1 = MID[0] + radius * cos(2 * PI * (i + 1) / 180 + startfaza);
+		double y1 = MID[1] + radius * sin(2 * PI * (i + 1) / 180 + startfaza);
+		double z1 = MID[2];
+		Vector3 normal = computeNormalTop(MID, new double[3] {x, y, z}, new double[3] {x1, y1, z1});
+		glNormal3dv((double*)&normal);
 		glColor4d(0.3, 0.5, 0.1, 0.5);
 		glVertex3d(MID[0], MID[1], MID[2] + height);
 		glVertex3d(x, y, z + height);
@@ -407,7 +453,7 @@ void Render(double delta_time)
 		glVertex3d(MID[0], MID[1], MID[2] + height);
 		i++;
 	}
-
+	
 	glNormal3d(0, 0, 1);
 	glColor4d(0.3, 0.5, 0.1, 0.5);
 	glVertex3dv((double*)&A1);
