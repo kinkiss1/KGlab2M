@@ -7,11 +7,11 @@
 #include <sstream>
 #include "GUItextRectangle.h"
 #include <random>
+#include <algorithm>
+#include <vector>
 
 
 #define PI 3.14159265358979323846
-
-
 
 struct Vector3 {
 	double x, y, z;
@@ -66,11 +66,15 @@ void static cyl(int seed = 0)
 	Vector3 G1 = { -2.0, -6.0, height };
 	Vector3 H1 = { 3.0, -4.0, height };
 
+
+
 	std::mt19937 gen(seed);
 	std::uniform_real_distribution<double> r(0, 1);
 
-	// Floor
+	
 	Vector3 normal = computeNormal(A, B, C);
+	
+	// Floor
 	glNormal3d(0,0,-1);
 	glColor3d(r(gen), r(gen), r(gen));
 	glVertex3dv((double*)&A);
@@ -78,7 +82,6 @@ void static cyl(int seed = 0)
 	glVertex3dv((double*)&C);
 	glVertex3dv((double*)&D);
 
-	
 	glNormal3d(0, 0, -1);
 	glColor3d(r(gen), r(gen), r(gen));
 	glVertex3dv((double*)&A);
@@ -86,37 +89,12 @@ void static cyl(int seed = 0)
 	glVertex3dv((double*)&E);
 	glVertex3dv((double*)&H);
 
-	
 	glNormal3d(0, 0, -1);
 	glColor3d(r(gen), r(gen), r(gen));
 	glVertex3dv((double*)&E);
 	glVertex3dv((double*)&F);
 	glVertex3dv((double*)&G);
 	glVertex3dv((double*)&H);
-
-	// Roof
-	
-	glNormal3d(0, 0, 1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv((double*)&A1);
-	glVertex3dv((double*)&B1);
-	glVertex3dv((double*)&C1);
-	glVertex3dv((double*)&D1);
-
-	
-	glNormal3d(0, 0, 1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv((double*)&A1);
-	glVertex3dv((double*)&D1);
-	glVertex3dv((double*)&E1);
-	glVertex3dv((double*)&H1);
-
-	glNormal3d(0,0,1);
-	glColor3d(r(gen), r(gen), r(gen));
-	glVertex3dv((double*)&E1);
-	glVertex3dv((double*)&F1);
-	glVertex3dv((double*)&G1);
-	glVertex3dv((double*)&H1);
 
 	// Walls connecting
 	normal = computeNormal(A, A1, B1);
@@ -186,7 +164,6 @@ void static cyl(int seed = 0)
 	glEnd();
 }
 
-
 #ifdef _DEBUG
 #include <Debugapi.h> 
 struct debug_print
@@ -222,11 +199,9 @@ Light light;
 #include "Camera.h"
 Camera camera;
 
-
 bool texturing = true;
 bool lightning = true;
 bool alpha = false;
-
 
 //переключение режимов освещения, текстурирования, альфаналожения
 void switchModes(OpenGL *sender, KeyEventArg arg)
@@ -273,7 +248,6 @@ void initRender()
 	//все, что ниже будет применено texId текстуре.
 	glBindTexture(GL_TEXTURE_2D, texId);
 
-
 	int x, y, n;
 
 	//загружаем картинку
@@ -283,7 +257,7 @@ void initRender()
 	//y - высота изображения
 	//n - количество каналов
 	//4 - нужное нам количество каналов
-	//пиксели будут хранится в памяти [R-G-B-A]-[R-G-B-A]-[..... 
+	//пиксели будут храниться в памяти [R-G-B-A]-[R-G-B-A]-[..... 
 	// по 4 байта на пиксель - по байту на канал
 	//пустые каналы будут равны 255
 
@@ -301,13 +275,11 @@ void initRender()
 	}
 	delete[] _tmp;
 
-
 	//загрузка изображения в видеопамять
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 	//выгрузка изображения из опперативной памяти
 	stbi_image_free(data);
-
 
 	//настройка режима наложения текстур
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -340,7 +312,6 @@ void initRender()
 	gl.KeyDownEvent.reaction(switchModes);
 	text.setSize(512, 180);
 	//========================================================
-	   
 
 	camera.setPosition(2, 1.5, 1.5);
 }
@@ -361,14 +332,12 @@ void Render(double delta_time)
 	camera.SetUpCamera();
 	light.SetUpLight();
 
-
 	//рисуем оси
 	gl.DrawAxes();
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-	
 
 	//включаем режимы, в зависимости от нажания клавиш. см void switchModes(OpenGL *sender, KeyEventArg arg)
 	if (lightning)
@@ -386,7 +355,6 @@ void Render(double delta_time)
 	}
 		
 	//=============НАСТРОЙКА МАТЕРИАЛА==============
-
 
 	//настройка материала, все что рисуется ниже будет иметь этот метериал.
 	//массивы с настройками материала
@@ -409,37 +377,67 @@ void Render(double delta_time)
 			   //(GL_SMOOTH - плоская закраска)
 
 	//============ РИСОВАТЬ ТУТ ==============
-	cyl();
+
+	double height = 1.0;
+	Vector3 A1 = { 1.0, 0.0, height };
+	Vector3 B1 = { 6.0, 3.0, height };
+	Vector3 C1 = { 4.0, 7.0, height };
+	Vector3 D1 = { 0.0, 2.0, height };
+	Vector3 E1 = { -4.0, 3.0, height };
+	Vector3 F1 = { -7.0, -2.0, height };
+	Vector3 G1 = { -2.0, -6.0, height };
+	Vector3 H1 = { 3.0, -4.0, height };
+	Vector3 Aс = { 0.615385 , 0.461538, 1 };
+	Vector3 Bс = { 1.000000  ,0.692308, 1 };
+	Vector3 Cс = { 0.846154 , 1.000000 ,1 };
+	Vector3 Dс = { 0.538462 , 0.615385 ,1 };
+	Vector3 Eс = { 0.230769  ,0.692308 ,1 };
+	Vector3 Fс = { 0.000000 , 0.307692 ,1 };
+	Vector3 Gс = { 0.384615 , 0.000000 ,1 };
+	Vector3 Hс = { 0.769231 , 0.153846 ,1 };
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texId); //привязываем текстуру к текущему контексту
+
+	glBegin(GL_QUADS);
+	glNormal3d(0, 0, 1);
+	glColor3d(0.3,0.5,0.1);
+	glTexCoord3dv((double*)&Aс);
+	glVertex3dv((double*)&A1);
+	glTexCoord3dv((double*)&Bс);
+	glVertex3dv((double*)&B1);
+	glTexCoord3dv((double*)&Cс);
+	glVertex3dv((double*)&C1);
+	glTexCoord3dv((double*)&Dс);
+	glVertex3dv((double*)&D1);
 	
 
-	////квадратик станкина
-	////так как расчет освещения происходит только в вершинах
-	//// (закраска по Гуро)
-	////то рисуем квадратик из более маленьких квадратиков
-	//glBindTexture(GL_TEXTURE_2D, texId);
-	//glBegin(GL_QUADS);
-	//glNormal3d(0, 0, 1);
-	//double h = 0.025;
-	//for (double x = h; x<= 1; x+= h)
-	//	for (double y = h; y <= 1; y += h)
-	//	{
-	//		glColor3d(1, 1, 0);
-
-	//		glTexCoord2d(x, y);
-	//		glVertex2d(x, y);
-
-	//		glTexCoord2d(x-h, y);
-	//		glVertex2d(x-h, y);
-
-	//		glTexCoord2d(x - h, y-h);
-	//		glVertex2d(x - h, y-h);
-
-	//		glTexCoord2d(x, y - h);
-	//		glVertex2d(x, y - h);
-	//	}
-	//glEnd();
+	glNormal3d(0, 0, 1);
+	glColor3d(0.3, 0.5, 0.1);
+	glTexCoord3dv((double*)&Aс);
+	glVertex3dv((double*)&A1);
+	glTexCoord3dv((double*)&Dс);
+	glVertex3dv((double*)&D1);
+	glTexCoord3dv((double*)&Eс);
+	glVertex3dv((double*)&E1);
+	glTexCoord3dv((double*)&Hс);
+	glVertex3dv((double*)&H1);
 
 
+	glNormal3d(0, 0, 1);
+	glColor3d(0.3, 0.5, 0.1);
+	glTexCoord3dv((double*)&Eс);
+	glVertex3dv((double*)&E1);
+	glTexCoord3dv((double*)&Fс);
+	glVertex3dv((double*)&F1);
+	glTexCoord3dv((double*)&Gс);
+	glVertex3dv((double*)&G1);
+	glTexCoord3dv((double*)&Hс);
+	glVertex3dv((double*)&H1);
+	
+	glEnd();
+	cyl();
+	
 	//===============================================
 
 	//рисуем источник света
@@ -467,7 +465,6 @@ void Render(double delta_time)
 	//отрисованное тут будет визуалзироватся в 2д системе координат
 	//нижний левый угол окна - точка (0,0)
 	//верхний правый угол (ширина_окна - 1, высота_окна - 1)
-
 	
 	std::wstringstream ss;
 	ss << std::fixed << std::setprecision(3);
@@ -482,7 +479,6 @@ void Render(double delta_time)
 	ss << L"Параметры камеры: R=" << std::setw(7) << camera.distance() << ",fi1=" << std::setw(7) << camera.fi1() << ",fi2=" << std::setw(7) << camera.fi2() << std::endl;
 	ss << L"delta_time: " << std::setprecision(5)<< delta_time << std::endl;
 
-	
 	text.setPosition(10, gl.getHeight() - 10 - 180);
 	text.setText(ss.str().c_str());
 	text.Draw();
@@ -492,9 +488,4 @@ void Render(double delta_time)
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-	
-
 }   
-
-
-
