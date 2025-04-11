@@ -395,12 +395,12 @@ void Render(double delta_time)
 		glVertex3d(x, y, z);
 		glVertex3d(x1, y1, z1);
 		glVertex3d(MID[0], MID[1], MID[2]);
-		glColor3d(0.3, 0.5, 0.1);
+		glColor3d(1, 0.5, 0.1);
 		glVertex3d(x, y, z);
 		glVertex3d(x, y, z + height);
 		glVertex3d(x1, y1, z1 + height);
 		glVertex3d(x1, y1, z1);
-		glColor4d(0.3, 0.5, 0.1, 0.5);
+		glColor4d(0, 0.1, 0.6, 0.5);
 		glVertex3d(MID[0], MID[1], MID[2] + height);
 		glVertex3d(x, y, z + height);
 		glVertex3d(x1, y1, z1 + height);
