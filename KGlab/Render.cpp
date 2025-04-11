@@ -391,6 +391,7 @@ void Render(double delta_time)
 		double y1 = MID[1] + radius * sin(2 * PI * (i + 1) / 180 + startfaza);
 		double z1 = MID[2];
 		glColor3d(0.3, 0.5, 0.1);
+		
 		glVertex3d(MID[0], MID[1], MID[2]);
 		glVertex3d(x, y, z);
 		glVertex3d(x1, y1, z1);
@@ -400,14 +401,27 @@ void Render(double delta_time)
 		glVertex3d(x, y, z + height);
 		glVertex3d(x1, y1, z1 + height);
 		glVertex3d(x1, y1, z1);
-		glColor4d(0, 0.1, 0.6, 0.5);
+		i++;
+	}
+	i = 0;
+	glColor3d(0.3, 0.5, 0.1);
+	while (i<90)
+	{
+		double x = MID[0] + radius * cos(2 * PI * i / 180 + startfaza);
+		double y = MID[1] + radius * sin(2 * PI * i / 180 + startfaza);
+		double z = MID[2];
+		double x1 = MID[0] + radius * cos(2 * PI * (i + 1) / 180 + startfaza);
+		double y1 = MID[1] + radius * sin(2 * PI * (i + 1) / 180 + startfaza);
+		double z1 = MID[2];
+
+		glColor4d(0.3, 0.5, 0.1, 0.5);
 		glVertex3d(MID[0], MID[1], MID[2] + height);
 		glVertex3d(x, y, z + height);
 		glVertex3d(x1, y1, z1 + height);
 		glVertex3d(MID[0], MID[1], MID[2] + height);
 		i++;
 	}
-
+	
 	glNormal3d(0, 0, 1);
 	glColor4d(0.3, 0.5, 0.1, 0.5);
 	glVertex3dv((double*)&A1);
